@@ -28,7 +28,7 @@ Este documento descreve o processo de setup para a execução do projeto OmniCru
 
 1. Clone o repositório do projeto:
 
-   git clone <URL_DO_REPOSITÓRIO_BACKEND>
+   git clone https://github.com/saraego/OmniCrudConnect
 
 2. Acesse o diretório do backend:
 
@@ -66,7 +66,7 @@ O backend do projeto estará sendo executado na porta 8000.
 
 1. Clone o repositório do projeto:
 
-   git clone <URL_DO_REPOSITÓRIO_FRONTEND>
+   git clone [<URL_DO_REPOSITÓRIO_FRONTEND>](https://github.com/saraego/OmniCrudConnect)
 
 2. Acesse o diretório do frontend:
 
