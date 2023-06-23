@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Wrapper, Heading, Card, UserImage, InputFile, CustomButton } from "./style";
+import { Wrapper, Heading, Card, UserImage, InputFile, CustomButton, Input, Textarea } from "./style";
 
 const UserDetails = () => {
   const { userId } = useParams();
@@ -10,14 +9,12 @@ const UserDetails = () => {
   const [image, setImage] = useState(null);
   const inputFileRef = useRef(null);
   const [address, setAddress] = useState(null);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailContent, setEmailContent] = useState("");
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  const fetchUser = async () => {
+  const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/usuario/${userId}`);
+      const response = await axios.get(`http://localhost:8000/api/user/${userId}`);
       const userData = response.data;
       setUser(userData);
       fetchAddress(userData.cep);
@@ -38,6 +35,11 @@ const UserDetails = () => {
     }
   };
 
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -51,6 +53,24 @@ const UserDetails = () => {
 
   const handleChooseImage = () => {
     inputFileRef.current.click();
+  };
+
+  const handleEmailSubjectChange = (event) => {
+    setEmailSubject(event.target.value);
+  };
+
+  const handleEmailContentChange = (event) => {
+    setEmailContent(event.target.value);
+  };
+
+  const handleEmailClick = () => {
+    const email = user.email;
+    const subject = emailSubject;
+    const body = emailContent;
+
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoLink;
   };
 
   if (!user) {
@@ -82,6 +102,22 @@ const UserDetails = () => {
           <p>Estado: {address.uf}</p>
         </Card>
       )}
+
+      <Card>
+        <Heading>Enviar E-mail</Heading>
+        <Input
+          type="text"
+          placeholder="Assunto"
+          value={emailSubject}
+          onChange={handleEmailSubjectChange}
+        />
+        <Textarea
+          placeholder="Mensagem"
+          value={emailContent}
+          onChange={handleEmailContentChange}
+        />
+        <CustomButton onClick={handleEmailClick}>Enviar E-mail</CustomButton>
+      </Card>
     </Wrapper>
   );
 };

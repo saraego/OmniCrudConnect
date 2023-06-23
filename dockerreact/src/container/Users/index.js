@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -18,7 +16,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/usuarios");
+      const response = await axios.get("http://localhost:8000/api/users");
       const data = response.data;
       setUsers(data);
     } catch (error) {
@@ -28,7 +26,7 @@ const Users = () => {
 
   const deleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/usuario/${userId}`);
+      await axios.delete(`http://localhost:8000/api/user/${userId}`);
       const remainingUsers = users.filter((user) => user.id !== userId);
       setUsers(remainingUsers);
       toast.success("Usuário excluído com sucesso!");
@@ -50,7 +48,7 @@ const Users = () => {
   const saveUser = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/api/usuario/${editingUser.id}`,
+        `http://localhost:8000/api/user/${editingUser.id}`,
         editingUser
       );
       setEditingUser(null);
@@ -86,7 +84,6 @@ const Users = () => {
   return (
     <Wrapper>
       <ResponsiveWrapper>
-
         <div className="div-busca">
           <Input
             type="text"
@@ -98,16 +95,17 @@ const Users = () => {
         {filteredUsers.length > 0 ? (
           <Table>
             <thead>
-            <Button onClick={sortUsersAlphabetically}> Por ordem alfabética</Button>
-              <tr> 
-                <Th>
-                  Nome
-                </Th>
+              <tr>
+                <Th>Nome</Th>
                 <Th>Idade</Th>
                 <Th>Email</Th>
                 <Th>Telefone</Th>
                 <Th>CEP</Th>
-                <Th>Ações</Th>
+                <Th>
+                  <Button onClick={sortUsersAlphabetically}>
+                    Por ordem alfabética
+                  </Button>
+                </Th>
               </tr>
             </thead>
             <tbody>
@@ -166,7 +164,7 @@ const Users = () => {
                     <Td>
                       <Link to={`/users/${user.id}`}>{user.name}</Link>
                     </Td>
-                    <Td>{user.idade} anos</Td>
+                    <Td>{user.age} anos</Td>
                     <Td>{user.email}</Td>
                     <Td>{user.phone}</Td>
                     <Td>{user.cep}</Td>

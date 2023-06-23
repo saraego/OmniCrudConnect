@@ -2,71 +2,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styled from "styled-components";
+import {
+  Container,
+  Heading,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  AddressContainer,
+  AddressLabel,
+  AddressValue,
+} from "./style";
 
-const Container = styled.div`
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-`;
 
-const Heading = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-weight: bold;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-`;
-
-const AddressContainer = styled.div`
-  background-color: #f7f7f7;
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
-`;
-
-const AddressLabel = styled.p`
-  margin-bottom: 5px;
-`;
-
-const AddressValue = styled.p`
-  font-weight: bold;
-  margin-bottom: 10px;
-`;
 
 function App() {
   const [name, setName] = useState("");
@@ -95,22 +44,27 @@ function App() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/api/usuario", {
+      const response = await axios.post("http://localhost:8000/api/user", {
         name,
-        idade,
+        age: idade,
         cep,
         email,
         phone,
         dataAniversario,
+        state: cepData.uf,
+        city: cepData.localidade,
+        address: `${cepData.logradouro}, ${cepData.bairro}`,
       });
+
       console.log(response.data); // Exemplo: exibir a resposta da API no console
       // Faça o que for necessário com a resposta da API
       toast.success("Cadastro realizado com sucesso!");
       resetForm();
     } catch (error) {
       console.error(error);
-      toast.error("Ocorreu um erro ao cadastrar. Por favor, tente novamente.");
+      toast.error(error.response.data.error);
     }
+    
   };
 
   const handleCepChange = async (e) => {
@@ -119,8 +73,10 @@ function App() {
 
     if (newCep.length === 8) {
       try {
-        const response = await fetch(`https://viacep.com.br/ws/${newCep}/json/`);
-        const data = await response.json();
+        const response = await axios.get(
+          `https://viacep.com.br/ws/${newCep}/json/`
+        );
+        const data = response.data;
         setCepData(data);
       } catch (error) {
         console.error(error);
@@ -146,7 +102,12 @@ function App() {
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Nome:</Label>
-          <Input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Idade:</Label>
@@ -173,16 +134,28 @@ function App() {
             <AddressLabel>Endereço:</AddressLabel>
             <AddressValue>{cepData.logradouro}</AddressValue>
             <AddressValue>{cepData.bairro}</AddressValue>
-            <AddressValue>{cepData.localidade} - {cepData.uf}</AddressValue>
+            <AddressValue>
+              {cepData.localidade} - {cepData.uf}
+            </AddressValue>
           </AddressContainer>
         )}
         <FormGroup>
           <Label>E-mail:</Label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Telefone:</Label>
-          <Input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+          <Input
+            type="text"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Data de Aniversário:</Label>
@@ -201,3 +174,4 @@ function App() {
 }
 
 export default App;
+
