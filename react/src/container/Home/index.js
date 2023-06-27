@@ -18,6 +18,7 @@ import {
 
 
 function App() {
+  
   const [name, setName] = useState("");
   const [idade, setIdade] = useState("");
   const [cep, setCep] = useState("");
@@ -57,8 +58,8 @@ function App() {
       });
 
       console.log(response.data); // Exemplo: exibir a resposta da API no console
-      // Faça o que for necessário com a resposta da API
-      toast.success("Cadastro realizado com sucesso!");
+    
+      toast.success(response.data.message);
       resetForm();
     } catch (error) {
       console.error(error);
@@ -126,7 +127,7 @@ function App() {
             value={cep}
             onChange={handleCepChange}
             required
-            disabled={cepData && cepData.uf !== "AM"}
+           /* disabled={cepData && cepData.uf !== "AM"} */
           />
         </FormGroup>
         {cepData && (

@@ -39,7 +39,7 @@ class UserController extends Controller
                 'address'   => 'required|string'
 
             ],[
-                'required' => 'O campo :attribute é obrigatório.',
+                'required' => 'O campo nome é obrigatório.',
                 'email' => 'O campo :attribute deve ser um endereço de email válido.',
                 'unique' => 'O campo :attribute já está em uso.',
                 'integer' => 'O campo :attribute deve ser um número inteiro.',
@@ -118,7 +118,7 @@ class UserController extends Controller
             'city'      => 'required|string',
             'address'   => 'required|string'
         ], [
-            'required' => 'O campo :attribute é obrigatório.',
+            'required' => 'O campo nome é obrigatório.',
             'email' => 'O campo :attribute deve ser um endereço de email válido.',
             'unique' => 'O campo :attribute já está em uso.',
             'integer' => 'O campo :attribute deve ser um número inteiro.',
@@ -166,7 +166,11 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Usuário excluido com sucesso !'
         ],200);
-       } catch (\Exception $e) {
+       } catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e){
+        return response()->json([
+            'message' => 'Usuario não encontrado'
+        ],404);
+      } catch (\Exception $e) {
         return response()->json([
             'message' => 'Erro ao excluir usuário',
             'error' => $e->getMessage()

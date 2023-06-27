@@ -77,6 +77,8 @@ const UserDetails = () => {
     return <div>Loading...</div>;
   }
 
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${"5592"+user.phone}`;
+
   return (
     <Wrapper>
       <Card>
@@ -88,9 +90,10 @@ const UserDetails = () => {
       <Card>
         <Heading>Detalhes do Usuário</Heading>
         <p>Nome: {user.name}</p>
-        <p>Idade: {user.idade} anos</p>
+        <p>Idade: {user.age} anos</p>
         <p>Email: {user.email}</p>
         <p>Telefone: {user.phone}</p>
+        <p><a href={whatsappLink} target="_blank" rel="noreferrer">Enviar mensagem pelo WhatsApp</a></p>
         <p>CEP: {user.cep}</p>
       </Card>
       {address && (
